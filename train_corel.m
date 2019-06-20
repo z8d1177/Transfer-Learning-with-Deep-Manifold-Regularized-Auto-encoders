@@ -1,17 +1,9 @@
 global params;
 
-global numM;                % input data feature dimensions  m
-global numK;                                 % number of hidden units k
-global numC;
-global beta;
-global numX;
-
-
 %% ======================================================================
 %  STEP 1: Load data
 %
 load('corel.mat');
-numExamples = size(data, 2);
 
 result =[];
 iCnt = 1;
@@ -49,18 +41,9 @@ for sourceFlowerIndex = 1:4
                 layers = 2;
                 for layer = 1:layers
                     
-                    imgSize = 16;
-                    params.patchWidth=9;           % width of a patch
-                    params.n=params.patchWidth^2;   % dimensionality of input to RICA
-                    % params.lambda = 0.0005;   % sparsity cost
-                    params.lambda = 1e-2;
-                    params.numFeatures = 64; % number of filter banks to learn
-                    % params.epsilon = 1e-2;
-                    params.epsilon = 1e-6;
-                    params.m=20000; % num patches
-                    
                     params.alpha = 0.5;%1;
                     params.beta = 0.00001;%0.0001;
+                    params.gamma = 0.00001;%0.0001; 
                     params.numK = 10;   %80;%10;
                     params.numC = 2;   %80;%10;
                     params.numM = size(trainData,1);
@@ -86,10 +69,8 @@ for sourceFlowerIndex = 1:4
                     
                 end
                 
-                svmStruct = svmtrain(trainData',trainLabels','showplot',true);
-                C = svmclassify(svmStruct,testData','showplot',true);
-                errRate = sum(testLabels'~= C)/size(testData,2)  %mis-classification rate
-                result = [result;1 - errRate];
+                acc = test_LR(trainData, testData, trainLabels, testLabels);
+                result = [result;acc];
                 
                 iCnt = iCnt + 1;
             end
