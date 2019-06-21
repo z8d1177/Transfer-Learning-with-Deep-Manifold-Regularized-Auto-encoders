@@ -7,6 +7,8 @@ function result = test_LR(traindata, testdata, trainlabel, testlabel)
     result = zeros(2,1);
     trainlabel(trainlabel==0)=-1;
     testlabel(testlabel==0)=-1;
+    label = trainlabel;
+    label1 = testlabel;
     tempTrainXY = scale_cols(traindata, trainlabel);
     
     % train the classifier
@@ -28,4 +30,4 @@ function result = test_LR(traindata, testdata, trainlabel, testlabel)
     probability = 1./(1+1./(exp(C'*traindata)));
     probability(probability >= 0.5) = 1;
     probability(probability < 0.5) = -1;
-    result = mean(probability(:) == trainlabel(:));
+    result = mean(probability(:) == label(:));
